@@ -1,4 +1,4 @@
-name := "computation-graph"
+name := "reactive-sim"
 
 version := "0.1"
 
