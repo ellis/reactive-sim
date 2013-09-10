@@ -61,6 +61,15 @@ object RsResult {
 	def zero: RsResult[Unit] = RsSuccess[Unit](())
 	def unit[A](a: A): RsResult[A] = RsSuccess[A](a)
 	
+	def asInstanceOf[A : Manifest](that: AnyRef): RsResult[A] =
+		that match {
+			case a : A => RsSuccess(a)
+			case _ => RsError(s"expected instance of A: $that")
+		}
+	
+	def assert(b: Boolean, error: => String): RsResult[Unit] =
+		if (b) zero else RsError(error)
+	
 	def toResultOfList[B](l: List[RsResult[B]]): RsResult[List[B]] = {
 		l.foldRight(unit(List[B]()))((r, acc) => {
 			acc.flatMap(l => r.map(_ :: l))
