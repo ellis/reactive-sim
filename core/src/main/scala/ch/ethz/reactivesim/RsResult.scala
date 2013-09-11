@@ -64,7 +64,7 @@ object RsResult {
 	def asInstanceOf[A : Manifest](that: AnyRef): RsResult[A] =
 		that match {
 			case a : A => RsSuccess(a)
-			case _ => RsError(s"expected instance of A: $that")
+			case _ => RsError(s"expected instance of ${manifest[A].erasure.getName()}: $that")
 		}
 	
 	def assert(b: Boolean, error: => String): RsResult[Unit] =
