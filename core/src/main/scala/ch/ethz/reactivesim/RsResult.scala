@@ -58,6 +58,16 @@ sealed trait RsResult[+A] {
 }
 
 object RsResult {
+	def apply[A](opt: Option[A], error: => String): RsResult[A] = opt match {
+		case Some(x) => RsSuccess(x)
+		case None => RsError(error)
+	}
+	
+	def apply[A](a: A, error: => String): RsResult[A] = {
+		if (a == null) RsError(error)
+		else RsSuccess(a)
+	}
+	
 	def zero: RsResult[Unit] = RsSuccess[Unit](())
 	def unit[A](a: A): RsResult[A] = RsSuccess[A](a)
 	
@@ -128,7 +138,7 @@ object RsError {
 }
 
 class RsOptionW[A](opt: Option[A]) {
-	def asRs(error: String): RsResult[A] = opt match {
+	def asRs(error: => String): RsResult[A] = opt match {
 		case Some(x) => RsSuccess(x)
 		case None => RsError(error)
 	}
